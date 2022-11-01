@@ -5,6 +5,9 @@ const fs = require('fs');
 const dontenv = require('dotenv').config();
 const db = require('./configs/connection');
 
+// Importing Routes
+const authRoutes = require('./routes/auth.route');
+
 // Initializing an express app
 const app = express();
 
@@ -18,6 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Logging incoming requests
 app.use(morgan('dev'));
+
+// API Routes
+app.use('/api/auth', authRoutes);
 
 // Test API
 app.get('/api', (req, res) => {
