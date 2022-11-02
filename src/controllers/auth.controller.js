@@ -1,7 +1,7 @@
 const axios = require('axios');
 const Auth = require('./../models/auth.schema');
 const User = require('./../models/user.schema');
-const { generateOtp, sendEmail, sendEmailOtp, hashPassword, generateBearerToken } = require('./../utilities/utils');
+const { sendEmailOtp, hashPassword, validatePassword, generateBearerToken } = require('./../utilities/utils');
 const dotenv = require('dotenv').config();
 
 const googleSignIn = async (req, res) => {
@@ -65,8 +65,8 @@ const signUp = async (req, res) => {
 
         const newUser = new User({
             name: req.body.name,
-            username: req.body.name,
-            email: req.body.name,
+            username: req.body.username,
+            email: req.body.email,
             password: hashedPassword,
             role: 'USER',
             loginProvider: 'CLOUD BIND',
@@ -75,16 +75,18 @@ const signUp = async (req, res) => {
 
         await newUser.save();
 
-        const auth = sendEmailOtp(req, newUser);
+        const auth = await sendEmailOtp(req, newUser);
 
-        const { token, expireDate } = generateBearerToken(newUser);
+        const { token, expireDate } = await generateBearerToken(newUser);
 
         res.status(201).json({
             message: 'User registered',
-            authEmailId: auth._id,
-            user: newUser,
-            token: token,
-            expireDate: expireDate
+            data: {
+                authEmailId: auth._id,
+                user: newUser,
+                token,
+                expireDate
+            }
         });
     } catch (error) {
         res.status(500).json({
@@ -111,9 +113,9 @@ const login = async (req, res) => {
                 
                 res.status(200).json({
                     data: {
-                        user: user, 
-                        token: token,
-                        expireDate: expireDate
+                        user, 
+                        token,
+                        expireDate
                     }
                 });
             }
@@ -148,6 +150,10 @@ const verifyOtp = async (req, res) => {
                 } else {
                     user = await User.findByIdAndUpdate(user._id, { isActivated: true }, { new: true });
 
+                    await Auth.findByIdAndUpdate(authEmail._id, { isExpired: true });
+
+                    await Auth.findByIdAndUpdate(req.token._id, { isExpired: true });
+
                     const { token, expireDate } = await generateBearerToken(req, user);
                     
                     res.status(200).json({
@@ -179,6 +185,8 @@ const setUsername = async (req, res) => {
         } else {
             user = await user.findByIdAndUpdate(user._id, { username: req.body.username, isActivated: true }, { new: true });
 
+            await Auth.findByIdAndUpdate(req.token._id, { isExpired: true });
+
             const { token, expireDate } = await generateBearerToken(req, user);
 
             res.status(200).json({
@@ -206,16 +214,20 @@ const sendOtpEmail = async (req, res) => {
                 message: 'User not found'
             });
         } else {
-            const auth = sendEmailOtp(req, user);
+            const auth = await sendEmailOtp(req, user);
 
-            const { token, expireDate } = generateBearerToken(newUser);
+            await Auth.findByIdAndUpdate(req.token._id, { isExpired: true });
+
+            const { token, expireDate } = await generateBearerToken(newUser);
 
             res.status(201).json({
                 message: 'User registered',
-                authEmailId: auth._id,
-                user: newUser,
-                token: token,
-                expireDate: expireDate
+                data: {
+                    authEmailId: auth._id,
+                    user,
+                    token,
+                    expireDate
+                }
             });
         }
     } catch (error) {

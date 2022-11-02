@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
             trim: true,
             unique: true,
             minlength: [8, 'Username too short'],
-            maxlength: [12, 'Username too long']
+            maxlength: [32, 'Username too long']
         },
         email: {
             type: String,
@@ -25,9 +25,7 @@ const userSchema = new mongoose.Schema(
         },
         password: {
             type: String,
-            trim: true,
-            minlength: [8, 'Password too short'],
-            maxlength: [32, 'Password too long']
+            trim: true
         },
         profilePicture: {
             type: String

@@ -14,14 +14,14 @@ const router = express.Router();
 
 router.post('/google/signin', googleSignIn);
 
-router.post('/signup', signUp);
+router.post('/cloudbind/signup', signUp);
 
-router.post('/login', login);
+router.post('/cloudbind/login', login);
 
-router.post('/verifyOtp', [auth.verifyJwt, auth.accountActivatedFalse, auth.loginProviderCloudBind], verifyOtp);
+router.post('/cloudbind/verify-otp', [auth.verifyJwt, auth.accountActivatedFalse, auth.loginProviderCloudBind], verifyOtp);
 
-router.post('/setUsername', [auth.accountActivatedFalse, auth.accountActivatedFalse, auth.loginProviderGoogle], setUsername);
+router.post('/google/setUsername', [auth.accountActivatedFalse, auth.accountActivatedFalse, auth.loginProviderGoogle], setUsername);
 
-router.post('/emailOtp', [auth.verifyJwt, auth.accountActivatedFalse, auth.loginProviderCloudBind], sendOtpEmail);
+router.post('/cloudbind/send-otp-email', [auth.verifyJwt, auth.accountActivatedFalse, auth.loginProviderCloudBind], sendOtpEmail);
 
 module.exports = router;

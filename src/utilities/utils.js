@@ -53,7 +53,7 @@ const sendEmailOtp = async (req, user) => {
             email: user.email
         },
         token: otp,
-        tokenType: 'EMAIL OTP',
+        tokenType: 'EMAIL VERIFICATION CODE',
         expireAt: lessMinuteDate,
         lastAccess: new Date(),               
         clientIPAddress: req.connection.remoteAddress,
@@ -74,7 +74,7 @@ const validatePassword = (password, hashPassword) => {
 };
 
 const generateBearerToken = async (user) => {
-    const jwtToken = jwt.sign({
+    const token = jwt.sign({
         userId: user._id,
         name: user.name,
         username: user.username,
@@ -90,7 +90,7 @@ const generateBearerToken = async (user) => {
     expireDate.setHours(expireDate.getHours() + 24);
 
     await new Auth({
-        token: jwtToken,
+        token:token,
         user: {
             id: user._id,
             username: user.username,
@@ -104,7 +104,7 @@ const generateBearerToken = async (user) => {
     }).save();
 
     return {
-        jwtToken,
+        token,
         expireDate
     };
 };
