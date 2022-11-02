@@ -19,8 +19,8 @@ const googleSignIn = async (req, res) => {
             const user = await User.findOne({ email: userProfile.data.email, isDeleted: false});
         
             if (user && user !== null) {
-                if (user.provider === 'GOOGLE') {
-                    const { token, expireDate } = generateBearerToken(user);
+                if (user.loginProvider === 'GOOGLE') {
+                    const { token, expireDate } = await generateBearerToken(user);
                     res.status(200).json({
                         data: {
                             user,
@@ -46,9 +46,15 @@ const googleSignIn = async (req, res) => {
                 
                 await newUser.save();
 
+                const { token, expireDate } = await generateBearerToken(newUser);
+
                 res.status(201).json({
                     message: 'User registered!',
-                    data: newUser
+                    data: {
+                        user: newUser,
+                        token,
+                        expireDate
+                    }
                 });
             }
         }

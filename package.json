@@ -1,6 +1,6 @@
 {
   "name": "cloudbind-api",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Backend for Cloud Bind app",
   "main": "index.js",
   "scripts": {
