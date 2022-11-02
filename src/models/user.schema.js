@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema(
         },
         username: {
             type: String,
-            required: true,
             trim: true,
             unique: true,
             minlength: [8, 'Username too short'],
