@@ -75,7 +75,7 @@ const validatePassword = (password, hashPassword) => {
 
 const generateBearerToken = async (user) => {
     const token = jwt.sign({
-        userId: user._id,
+        id: user._id,
         name: user.name,
         username: user.username,
         email: user.email,
