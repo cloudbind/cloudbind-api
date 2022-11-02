@@ -51,7 +51,7 @@ const auth = {
                 next();
             } else {
                 res.status(403).json({
-                    message: 'Account already activated!'
+                    message: 'Please activate your account!'
                 });
             }
         } catch (error) {
@@ -67,7 +67,7 @@ const auth = {
                 next();
             } else {
                 res.status(403).json({
-                    message: 'Please activate your account!'
+                    message: 'Account already activated!'
                 });
             }
         } catch (error) {

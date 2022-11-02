@@ -115,7 +115,7 @@ const login = async (req, res) => {
                     message: 'Invalid email or password'
                 });
             } else {
-                const { token, expireDate } = await generateBearerToken(req, user);
+                const { token, expireDate } = await generateBearerToken(user);
                 
                 res.status(200).json({
                     data: {
@@ -189,7 +189,7 @@ const setUsername = async (req, res) => {
                 message: 'User not found'
             });
         } else {
-            user = await user.findByIdAndUpdate(user._id, { username: req.body.username, isActivated: true }, { new: true });
+            user = await User.findByIdAndUpdate(user._id, { username: req.body.username, isActivated: true }, { new: true });
 
             await Auth.findByIdAndUpdate(req.token._id, { isExpired: true });
 
@@ -224,10 +224,10 @@ const sendOtpEmail = async (req, res) => {
 
             await Auth.findByIdAndUpdate(req.token._id, { isExpired: true });
 
-            const { token, expireDate } = await generateBearerToken(newUser);
+            const { token, expireDate } = await generateBearerToken(user);
 
             res.status(201).json({
-                message: 'User registered',
+                message: 'OTP sent successfully!',
                 data: {
                     authEmailId: auth._id,
                     user,
