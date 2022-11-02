@@ -4,7 +4,7 @@ const dotenv = require('dotenv').config();
 
 const auth = {
     verifyJwt: async (req, res, next) => {
-        try{
+        try {
             if (req.header('Authorization')) {
                 const token = req.header('Authorization').replace('Bearer ', '');
                 if (!token) {
@@ -19,14 +19,14 @@ const auth = {
                             message: 'Please Authenticate!'
                         });
                     } else {
-                        const checkToken = await Auth.findOneAndUpdate({ token: token }, { lastAccess: new Date() }, { new: true });
+                        const checkToken = await Auth.findOneAndUpdate({ token: token, isExpired: false }, { lastAccess: new Date() }, { new: true });
 
                         if (!checkToken) {
                             res.status(401).json({
                                 message: 'Please Authenticate!'
                             });
                         } else {
-                            req.token = token;
+                            req.token = checkToken;
                             req.user = jwtVerify;
 
                             next();
@@ -50,8 +50,8 @@ const auth = {
             if (req.user.isActivated === true) {
                 next();
             } else {
-                res.status(401).json({
-                    message: 'Please activate your account!'
+                res.status(403).json({
+                    message: 'Account already activated!'
                 });
             }
         } catch (error) {
@@ -66,8 +66,8 @@ const auth = {
             if (req.user.isActivated === false) {
                 next();
             } else {
-                res.status(401).json({
-                    message: 'Account already activated!'
+                res.status(403).json({
+                    message: 'Please activate your account!'
                 });
             }
         } catch (error) {
@@ -79,7 +79,7 @@ const auth = {
 
     loginProviderGoogle: (req, res, next) => {
         try {
-            if (req.user.loginProvide === 'GOOGLE') {
+            if (req.user.loginProvider === 'GOOGLE') {
                 next();
             } else {
                 res.status(403).json({
@@ -95,10 +95,10 @@ const auth = {
 
     loginProviderCloudBind: (req, res, next) => {
         try {
-            if (req.user.loginProvide === 'CLOUD BIND') {
+            if (req.user.loginProvider === 'CLOUD BIND') {
                 next();
             } else {
-                res.status(403).json({
+                res.status(403  ).json({
                     message: 'Access Denied'
                 });
             }

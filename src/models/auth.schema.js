@@ -28,7 +28,11 @@ const authSchema = new mongoose.Schema(
         },
         tokenType: {
             type: String,
-            enum: ['BEARER', 'VERIFICATION CODE']
+            enum: ['BEARER', 'EMAIL VERIFICATION CODE']
+        },
+        isExpired: {
+            type: Boolean,
+            default: false
         },
         expireAt: {
             type: Date,
