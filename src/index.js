@@ -7,6 +7,7 @@ const db = require('./configs/connection');
 
 // Importing Routes
 const authRoutes = require('./routes/auth.route');
+const fileRoutes = require('./routes/file.route')
 
 // Initializing an express app
 const app = express();
@@ -24,6 +25,7 @@ app.use(morgan('dev'));
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/upload', fileRoutes);
 
 // Test API
 app.get('/api', (req, res) => {
