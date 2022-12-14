@@ -20,7 +20,10 @@ const userSchema = new mongoose.Schema(
             trim: true,
             lowercase: true,
             unique: true,
-            match: [/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/, 'Please enter a valid email address']
+            match: [
+                /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/,
+                'Please enter a valid email address'
+            ]
         },
         password: {
             type: String,
@@ -37,6 +40,37 @@ const userSchema = new mongoose.Schema(
             type: String,
             enum: ['CLOUD BIND', 'GOOGLE']
         },
+        friends: {
+            type: [
+                {
+                    _id: String,
+                    name: String,
+                    username: String
+                }
+            ]
+        },
+        friendRequests: {
+            type: [
+                {
+                    _id: String,
+                    name: String,
+                    username: String
+                }
+            ]
+        },
+        friendRequestsSent: {
+            type: [
+                {
+                    _id: String,
+                    name: String,
+                    username: String
+                }
+            ]
+        },
+        isVisible: {
+            type: Boolean,
+            default: false
+        },
         isActivated: {
             type: Boolean,
             default: false
@@ -45,7 +79,7 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             default: false
         }
-    }, 
+    },
     { timestamps: true }
 );
 
