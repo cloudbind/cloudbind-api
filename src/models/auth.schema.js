@@ -35,7 +35,7 @@ const authSchema = new mongoose.Schema(
             default: false
         },
         expireAt: {
-            type: Date,
+            type: Date
         },
         lastAccess: {
             type: Date
