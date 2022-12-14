@@ -1,7 +1,12 @@
 const axios = require('axios');
 const Auth = require('./../models/auth.schema');
 const User = require('./../models/user.schema');
-const { sendEmailOtp, hashPassword, validatePassword, generateBearerToken } = require('./../utilities/utils');
+const {
+    sendEmailOtp,
+    hashPassword,
+    validatePassword,
+    generateBearerToken
+} = require('./../utilities/utils');
 const dotenv = require('dotenv').config();
 
 const googleSignIn = async (req, res) => {
@@ -11,16 +16,21 @@ const googleSignIn = async (req, res) => {
                 'https://www.googleapis.com/userinfo/v2/me',
                 {
                     headers: {
-                        'Authorization': 'Bearer ' + req.body.accessToken
+                        Authorization: 'Bearer ' + req.body.accessToken
                     }
                 }
-            )
-            
-            const user = await User.findOne({ email: userProfile.data.email, isDeleted: false});
-        
+            );
+
+            const user = await User.findOne({
+                email: userProfile.data.email,
+                isDeleted: false
+            });
+
             if (user && user !== null) {
                 if (user.loginProvider === 'GOOGLE') {
-                    const { token, expireDate } = await generateBearerToken(user);
+                    const { token, expireDate } = await generateBearerToken(
+                        user
+                    );
                     res.status(200).json({
                         data: {
                             user,
@@ -43,10 +53,12 @@ const googleSignIn = async (req, res) => {
                     loginProvider: 'GOOGLE',
                     isActivated: false
                 });
-                
+
                 await newUser.save();
 
-                const { token, expireDate } = await generateBearerToken(newUser);
+                const { token, expireDate } = await generateBearerToken(
+                    newUser
+                );
 
                 res.status(201).json({
                     message: 'User registered!',
@@ -103,7 +115,10 @@ const signUp = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const user = await User.findOne({ email: req.body.email, isDeleted: false });
+        const user = await User.findOne({
+            email: req.body.email,
+            isDeleted: false
+        });
 
         if (!user) {
             res.status(404).json({
@@ -116,10 +131,10 @@ const login = async (req, res) => {
                 });
             } else {
                 const { token, expireDate } = await generateBearerToken(user);
-                
+
                 res.status(200).json({
                     data: {
-                        user, 
+                        user,
                         token,
                         expireDate
                     }
@@ -142,7 +157,10 @@ const verifyOtp = async (req, res) => {
                 message: 'Email OTP not found'
             });
         } else {
-            let user = await User.findOne({ _id: authEmail.user.id, isDeleted: false });
+            let user = await User.findOne({
+                _id: authEmail.user.id,
+                isDeleted: false
+            });
 
             if (!user) {
                 res.status(404).json({
@@ -152,16 +170,27 @@ const verifyOtp = async (req, res) => {
                 if (authEmail.token !== req.body.emailOtp) {
                     res.status(400).json({
                         message: 'Invalid OTP'
-                    }); 
+                    });
                 } else {
-                    user = await User.findByIdAndUpdate(user._id, { isActivated: true }, { new: true });
+                    user = await User.findByIdAndUpdate(
+                        user._id,
+                        { isActivated: true },
+                        { new: true }
+                    );
 
-                    await Auth.findByIdAndUpdate(authEmail._id, { isExpired: true });
+                    await Auth.findByIdAndUpdate(authEmail._id, {
+                        isExpired: true
+                    });
 
-                    await Auth.findByIdAndUpdate(req.token._id, { isExpired: true });
+                    await Auth.findByIdAndUpdate(req.token._id, {
+                        isExpired: true
+                    });
 
-                    const { token, expireDate } = await generateBearerToken(req, user);
-                    
+                    const { token, expireDate } = await generateBearerToken(
+                        req,
+                        user
+                    );
+
                     res.status(200).json({
                         message: 'Email verified successfully',
                         data: {
@@ -189,7 +218,11 @@ const setUsername = async (req, res) => {
                 message: 'User not found'
             });
         } else {
-            user = await User.findByIdAndUpdate(user._id, { username: req.body.username, isActivated: true }, { new: true });
+            user = await User.findByIdAndUpdate(
+                user._id,
+                { username: req.body.username, isActivated: true },
+                { new: true }
+            );
 
             await Auth.findByIdAndUpdate(req.token._id, { isExpired: true });
 
@@ -214,7 +247,7 @@ const setUsername = async (req, res) => {
 const sendOtpEmail = async (req, res) => {
     try {
         const user = await User.findOne({ _id: req.user.id, isDeleted: false });
-        
+
         if (!user) {
             res.status(404).json({
                 message: 'User not found'

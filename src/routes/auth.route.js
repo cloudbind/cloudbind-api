@@ -1,5 +1,5 @@
 const express = require('express');
-const auth = require('./../middlewares/authentication.middleware'); 
+const auth = require('./../middlewares/authentication.middleware');
 const {
     googleSignIn,
     signUp,
@@ -18,10 +18,22 @@ router.post('/cloudbind/signup', signUp);
 
 router.post('/cloudbind/login', login);
 
-router.post('/cloudbind/verify-otp', [auth.verifyJwt, auth.accountActivatedFalse, auth.loginProviderCloudBind], verifyOtp);
+router.post(
+    '/cloudbind/verify-otp',
+    [auth.verifyJwt, auth.accountActivatedFalse, auth.loginProviderCloudBind],
+    verifyOtp
+);
 
-router.post('/google/set-username', [auth.verifyJwt, auth.accountActivatedFalse, auth.loginProviderGoogle], setUsername);
+router.post(
+    '/google/set-username',
+    [auth.verifyJwt, auth.accountActivatedFalse, auth.loginProviderGoogle],
+    setUsername
+);
 
-router.post('/cloudbind/send-otp-email', [auth.verifyJwt, auth.accountActivatedFalse, auth.loginProviderCloudBind], sendOtpEmail);
+router.post(
+    '/cloudbind/send-otp-email',
+    [auth.verifyJwt, auth.accountActivatedFalse, auth.loginProviderCloudBind],
+    sendOtpEmail
+);
 
 module.exports = router;

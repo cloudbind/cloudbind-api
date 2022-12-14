@@ -1,4 +1,4 @@
-const fileUpload = async(req, res) => {
+const fileUpload = async (req, res) => {
     try {
         if (req.files) {
             res.status(201).json({
@@ -7,7 +7,7 @@ const fileUpload = async(req, res) => {
         } else {
             res.status(400).json({
                 message: 'Files upload failed!'
-            })
+            });
         }
     } catch (error) {
         res.status(500).json({
