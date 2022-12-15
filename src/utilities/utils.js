@@ -4,17 +4,17 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 
 const generateOtp = (otpLength) => {
-    let digits = "0123456789";
-    let otp = "";
+    let digits = '0123456789';
+    let otp = '';
     for (let i = 0; i < otpLength; i++) {
-        otp += digits[Math.floor(Math.random()*10)];
+        otp += digits[Math.floor(Math.random() * 10)];
     }
     return otp;
 };
 
 const sendEmail = async (toEmail, subject, body) => {
     let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
+        host: 'smtp.gmail.com',
         port: 587,
         secure: false,
         requireTLS: true,
@@ -23,13 +23,13 @@ const sendEmail = async (toEmail, subject, body) => {
             pass: process.env.NODEMAILER_PASSWORD
         },
         tls: {
-            ciphers: "SSLv3",
-        },
+            ciphers: 'SSLv3'
+        }
     });
 
     let mailOptions = {
         from: process.env.NODEMAILER_EMAIL,
-        to:toEmail,
+        to: toEmail,
         subject: subject,
         text: body
     };
@@ -39,7 +39,7 @@ const sendEmail = async (toEmail, subject, body) => {
 
 const sendEmailOtp = async (req, user) => {
     const milliseconds = new Date().getTime();
-    const lessMinute = milliseconds - (1 * 60 * 1000);
+    const lessMinute = milliseconds - 1 * 60 * 1000;
     const lessMinuteDate = new Date(lessMinute);
 
     const otp = generateOtp(6);
@@ -55,7 +55,7 @@ const sendEmailOtp = async (req, user) => {
         token: otp,
         tokenType: 'EMAIL VERIFICATION CODE',
         expireAt: lessMinuteDate,
-        lastAccess: new Date(),               
+        lastAccess: new Date(),
         clientIPAddress: req.connection.remoteAddress,
         userAgent: req.headers['user-agent']
     }).save();
@@ -64,7 +64,7 @@ const sendEmailOtp = async (req, user) => {
 };
 
 const hashPassword = (password) => {
-    password = bcrypt.hashSync(password, 8); 
+    password = bcrypt.hashSync(password, 8);
     return password;
 };
 
@@ -74,23 +74,24 @@ const validatePassword = (password, hashPassword) => {
 };
 
 const generateBearerToken = async (user) => {
-    const token = jwt.sign({
-        id: user._id,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        loginProvider: user.loginProvider,
-        isActivated: user.isActivated
-    }, process.env.JWT_SECRET, {
-        expiresIn: '24h',
-    });
+    const token = jwt.sign(
+        {
+            id: user._id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            loginProvider: user.loginProvider,
+            isActivated: user.isActivated
+        },
+        process.env.JWT_SECRET
+    );
 
     const expireDate = new Date();
     expireDate.setHours(expireDate.getHours() + 24);
 
     await new Auth({
-        token:token,
+        token: token,
         user: {
             id: user._id,
             username: user.username,
@@ -109,7 +110,7 @@ const generateBearerToken = async (user) => {
     };
 };
 
-module.exports = { 
+module.exports = {
     generateOtp,
     sendEmail,
     sendEmailOtp,
