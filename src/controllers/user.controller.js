@@ -24,18 +24,12 @@ const searchUsers = async (req, res) => {
                 username: 1
             });
 
-            if (results.length === 0) {
-                res.status(404).json({
-                    message: 'user not found'
-                });
-            } else {
-                res.status(200).json({
-                    message: 'users list',
-                    data: {
-                        results
-                    }
-                });
-            }
+            res.status(200).json({
+                message: 'users list',
+                data: {
+                    results
+                }
+            });
         } else {
             res.status(404).json({
                 message: 'enter search text'
