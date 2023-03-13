@@ -80,6 +80,7 @@ const generateBearerToken = async (user) => {
             name: user.name,
             username: user.username,
             email: user.email,
+            profilePicture: user.profilePicture,
             role: user.role,
             loginProvider: user.loginProvider,
             isActivated: user.isActivated
