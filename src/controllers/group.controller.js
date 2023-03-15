@@ -4,28 +4,39 @@ const { generateOtp } = require('../utilities/utils');
 
 const createGroup = async (req, res) => {
     try {
-        const code = generateOtp(8);
+        const user = await User.findById(req.user.id);
 
-        const group = new Group({
-            parent: {
-                id: req.user.id,
-                name: req.user.name,
-                username: req.user.username,
-                email: req.user.email,
-                profilePicture: req.user.profilePicture
-            },
-            name: req.body.name,
-            code: code
-        });
+        if (!user) {
+            res.status(404).json({
+                message: 'User not found'
+            });
+        } else {
+            const code = generateOtp(8);
 
-        await group.save();
+            const group = new Group({
+                parent: {
+                    id: req.user.id,
+                    name: req.user.name,
+                    username: req.user.username,
+                    email: req.user.email,
+                    profilePicture: req.user.profilePicture
+                },
+                name: req.body.name,
+                code: code
+            });
 
-        res.status(201).json({
-            message: 'Group created',
-            data: {
-                group
-            }
-        });
+            user.groups.push(group._id)
+
+            await user.save();
+            await group.save();
+
+            res.status(201).json({
+                message: 'Group created',
+                data: {
+                    group
+                }
+            });
+        }
     } catch (error) {
         console.log(error.message);
         res.status(500).json({
@@ -79,7 +90,39 @@ const joinGroup = async (req, res) => {
     }
 };
 
+const viewGroups = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            res.status(404).json({
+                message: 'User not found'
+            });
+        } else {
+            const groups = [];
+
+            for await (const item of user.groups) {
+                const group = await Group.findById(item);
+                groups.push(group);
+            }
+
+            res.status(200).json({
+                message: 'Groups list',
+                data: {
+                    groups
+                }
+            })
+        }
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
 module.exports = {
     createGroup,
-    joinGroup
+    joinGroup,
+    viewGroups
 };
