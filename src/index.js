@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth.route');
 const fileRoutes = require('./routes/file.route');
 const userRoutes = require('./routes/user.route');
 const friendRoutes = require('./routes/friend.route');
+const groupRoutes = require('./routes/group.route');
 
 // Initializing an express app
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/upload', fileRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/friend', friendRoutes);
+app.use('/api/group', groupRoutes)
 
 // Test API
 app.get('/api', (req, res) => {

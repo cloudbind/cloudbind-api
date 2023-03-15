@@ -65,6 +65,9 @@ const userSchema = new mongoose.Schema(
                 }
             ]
         },
+        groups: {
+            type: [String]
+        },
         isVisible: {
             type: Boolean,
             default: false
