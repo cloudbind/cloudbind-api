@@ -6,6 +6,7 @@ const connectionParameters = {
     useNewUrlParser: true,
     useUnifiedTopology: true
 };
+mongoose.set('strictQuery', true);
 
 // Connecting to the database
 const connection = mongoose.connect(process.env.MONGODB_URI, connectionParameters)
