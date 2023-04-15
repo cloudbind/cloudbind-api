@@ -22,7 +22,8 @@ const createGroup = async (req, res) => {
                     profilePicture: req.user.profilePicture
                 },
                 name: req.body.name,
-                code: code
+                code: code,
+                isVisible: true
             });
 
             user.groups.push(group._id)
@@ -66,19 +67,25 @@ const joinGroup = async (req, res) => {
                         message: 'Group already joined'
                     });
                 } else {
-                    user.groups.push(group[0]._id);
-                    group[0].users.push({ id: user._id, name: user.name, username: user.username, email: user.email, profilePicture: user.profilePicture });
-
-                    await user.save();
-                    await group[0].save();
-
-                    res.status(200).json({
-                        message: 'Group joined',
-                        data: {
-                            user,
-                            group
-                        }
-                    });
+                    if (!group[0].isVisible) {
+                        res.status(404).json({
+                            message: 'Group not found'
+                        });
+                    } else {
+                        user.groups.push(group[0]._id);
+                        group[0].users.push({ id: user._id, name: user.name, username: user.username, email: user.email, profilePicture: user.profilePicture });
+    
+                        await user.save();
+                        await group[0].save();
+    
+                        res.status(200).json({
+                            message: 'Group joined',
+                            data: {
+                                user,
+                                group
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -121,8 +128,42 @@ const viewGroups = async (req, res) => {
     }
 };
 
+const toggleVisibility = async (req, res) => {
+    try {
+        const group = await Group.findById(req.params.id);
+
+        if (!group) {
+            res.status(404).json({
+                message: 'User not found'
+            });
+        } else {
+            if (req.user.id !== group.parent.id) {
+                res.status(404).json({
+                    message: 'User not found'
+                });
+            } else {
+                group.isVisible = !group.isVisible;
+                await group.save();
+
+                res.status(200).json({
+                    message: 'visibility toggled',
+                    data: {
+                        group
+                    }
+                });
+            }
+        }
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
 module.exports = {
     createGroup,
     joinGroup,
-    viewGroups
+    viewGroups,
+    toggleVisibility
 };

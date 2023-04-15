@@ -3,7 +3,8 @@ const auth = require('./../middlewares/authentication.middleware');
 const {
     createGroup,
     joinGroup,
-    viewGroups
+    viewGroups,
+    toggleVisibility
 } = require('../controllers/group.controller');
 
 const router = express.Router();
@@ -20,6 +21,12 @@ router.get(
     '/view',
     [auth.verifyJwt, auth.accountActivatedTrue],
     viewGroups
+);
+
+router.patch(
+    '/toggle-visibility/:id',
+    [auth.verifyJwt, auth.accountActivatedTrue],
+    toggleVisibility
 );
 
 module.exports = router;

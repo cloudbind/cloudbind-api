@@ -45,6 +45,9 @@ const groupSchema = new mongoose.Schema(
                     type: String
                 }
             }]
+        },
+        isVisible: {
+            type: Boolean
         }
     },
     { timestamps: true }
