@@ -4,7 +4,8 @@ const {
     createGroup,
     joinGroup,
     viewGroups,
-    toggleVisibility
+    toggleVisibility,
+    togglePhotoVisibility
 } = require('../controllers/group.controller');
 
 const router = express.Router();
@@ -27,6 +28,12 @@ router.patch(
     '/toggle-visibility/:id',
     [auth.verifyJwt, auth.accountActivatedTrue],
     toggleVisibility
+);
+
+router.patch(
+    '/toggle-photo-visibility/:id',
+    [auth.verifyJwt, auth.accountActivatedTrue],
+    togglePhotoVisibility
 );
 
 module.exports = router;

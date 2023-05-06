@@ -68,6 +68,9 @@ const userSchema = new mongoose.Schema(
         groups: {
             type: [String]
         },
+        gDriveRefreshToken:{
+            type: String
+        },
         isVisible: {
             type: Boolean,
             default: false

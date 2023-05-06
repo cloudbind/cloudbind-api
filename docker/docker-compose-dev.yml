@@ -3,7 +3,8 @@ version: '3'
 services:
   cloudbind-api:
     build:
-      context: .
+      context: ./..
+      dockerfile: docker/Dockerfile
       args:
         - NODE_ENV=development
     volumes:
