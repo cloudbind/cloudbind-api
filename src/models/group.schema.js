@@ -47,7 +47,12 @@ const groupSchema = new mongoose.Schema(
             }]
         },
         isVisible: {
-            type: Boolean
+            type: Boolean,
+            default: false
+        },
+        photoVisibility: {
+            type: Boolean,
+            default: false
         }
     },
     { timestamps: true }

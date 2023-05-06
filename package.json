@@ -7,10 +7,10 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node ./src/index.js",
         "dev": "nodemon ./src/index.js",
-        "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d",
-        "docker:dev-build": "docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d --build",
+        "docker:dev": "docker-compose -f docker/docker-compose.yml -f docker/docker-compose-dev.yml up -d",
+        "docker:dev-build": "docker-compose -f docker/docker-compose.yml -f docker/docker-compose-dev.yml up -d --build",
         "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose-prod.yml up -d --build",
-        "docker:down": "docker-compose down -v"
+        "docker:down": "docker-compose -f docker/docker-compose.yml down -v"
     },
     "repository": {
         "type": "git",
@@ -35,7 +35,10 @@
         "mongoose": "^6.6.5",
         "morgan": "^1.10.0",
         "multer": "^1.4.5-lts.1",
-        "nodemailer": "^6.8.0",
-        "nodemon": "^2.0.20"
+        "nodemailer": "^6.8.0"
+    },
+    "devDependencies": {
+        "eslint": "^8.39.0",
+        "nodemon": "^2.0.22"
     }
 }

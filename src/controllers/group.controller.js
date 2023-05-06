@@ -134,12 +134,12 @@ const toggleVisibility = async (req, res) => {
 
         if (!group) {
             res.status(404).json({
-                message: 'User not found'
+                message: 'group not found'
             });
         } else {
             if (req.user.id !== group.parent.id) {
                 res.status(404).json({
-                    message: 'User not found'
+                    message: 'group not found'
                 });
             } else {
                 group.isVisible = !group.isVisible;
@@ -159,11 +159,45 @@ const toggleVisibility = async (req, res) => {
             message: error.message
         });
     }
+};
+
+const togglePhotoVisibility = async (req, res) => {
+    try {
+        const group = await Group.findById(req.params.id);
+
+        if (!group) {
+            res.status(404).json({
+                message: 'group not found'
+            });
+        } else {
+            if (req.user.id !== group.parent.id) {
+                res.status(404).json({
+                    message: 'group not found'
+                });
+            } else {
+                group.photoVisibility = !group.photoVisibility;
+                await group.save();
+
+                res.status(200).json({
+                    message: 'photo visibility toggled',
+                    data: {
+                        group
+                    }
+                });
+            }
+        }
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({
+            message: error.message
+        });
+    }
 }
 
 module.exports = {
     createGroup,
     joinGroup,
     viewGroups,
-    toggleVisibility
+    toggleVisibility,
+    togglePhotoVisibility
 };
