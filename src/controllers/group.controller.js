@@ -1,4 +1,5 @@
 const Group = require('../models/group.schema');
+const Media = require('../models/media.schema');
 const User = require('../models/user.schema');
 const { generateOtp } = require('../utilities/utils');
 
@@ -23,10 +24,19 @@ const createGroup = async (req, res) => {
                 },
                 name: req.body.name,
                 code: code,
-                isVisible: true
+                isVisible: true,
+                users: []
             });
 
-            user.groups.push(group._id)
+            group.users.push({
+                id: req.user.id,
+                name: req.user.name,
+                username: req.user.username,
+                email: req.user.email,
+                profilePicture: req.user.profilePicture,
+                media: []
+            });
+            user.groups.push(group._id);
 
             await user.save();
             await group.save();
@@ -73,11 +83,17 @@ const joinGroup = async (req, res) => {
                         });
                     } else {
                         user.groups.push(group[0]._id);
-                        group[0].users.push({ id: user._id, name: user.name, username: user.username, email: user.email, profilePicture: user.profilePicture });
-    
+                        group[0].users.push({
+                            id: user._id,
+                            name: user.name,
+                            username: user.username,
+                            email: user.email,
+                            profilePicture: user.profilePicture
+                        });
+
                         await user.save();
                         await group[0].save();
-    
+
                         res.status(200).json({
                             message: 'Group joined',
                             data: {
@@ -118,7 +134,7 @@ const viewGroups = async (req, res) => {
                 data: {
                     groups
                 }
-            })
+            });
         }
     } catch (error) {
         console.log(error.message);
@@ -192,12 +208,29 @@ const togglePhotoVisibility = async (req, res) => {
             message: error.message
         });
     }
-}
+};
+
+const fetchMedia = async (req, res) => {
+    try {
+        const media = await Media.find({ groupId: req.params.id });
+
+        res.status(200).json({
+            message: 'list of media',
+            data: media
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
 
 module.exports = {
     createGroup,
     joinGroup,
     viewGroups,
     toggleVisibility,
-    togglePhotoVisibility
+    togglePhotoVisibility,
+    fetchMedia
 };

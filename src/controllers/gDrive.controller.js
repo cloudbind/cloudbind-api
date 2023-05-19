@@ -128,16 +128,12 @@ const gDriveUpload = async (req, res) => {
                 );
             });
 
-            console.log('1');
-
             const fileUrlCloudinary = await cloudinary.uploader.upload(
                 req.files['file'][0].path,
                 {
                     public_id: `cloudbind/${req.files['file'][0].filename}`
                 }
             );
-
-            console.log('2');
 
             // Face Recognition
             const response3 = await axios.post(
@@ -146,9 +142,6 @@ const gDriveUpload = async (req, res) => {
                     url: fileUrlCloudinary.url
                 }
             );
-
-            console.log(response3.data.tag);
-            console.log('3');
 
             let media = {};
             if (req.body.type == 'GROUP') {
@@ -169,7 +162,6 @@ const gDriveUpload = async (req, res) => {
 
                 for (const item of group.users) {
                     let tempUser = await User.findById(item.id);
-                    console.log('4');
 
                     response3.data.tag.forEach((itemInception) => {
                         if (parseInt(itemInception) == tempUser.tag) {

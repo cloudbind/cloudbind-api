@@ -186,7 +186,9 @@ const verifyOtp = async (req, res) => {
                         isExpired: true
                     });
 
-                    const { token, expireDate } = await generateBearerToken(user);
+                    const { token, expireDate } = await generateBearerToken(
+                        user
+                    );
 
                     res.status(200).json({
                         message: 'Email verified successfully',

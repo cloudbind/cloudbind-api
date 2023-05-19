@@ -4,12 +4,13 @@ const cors = require('cors');
 const fs = require('fs');
 const dontenv = require('dotenv').config();
 const db = require('./configs/connection');
+var cron = require('node-cron');
 
 // Importing Routes
 const authRoutes = require('./routes/auth.route');
 const fileRoutes = require('./routes/file.route');
 const friendRoutes = require('./routes/friend.route');
-const gDriveRoutes = require('./routes/gDrive.route')
+const gDriveRoutes = require('./routes/gDrive.route');
 const groupRoutes = require('./routes/group.route');
 const userRoutes = require('./routes/user.route');
 
@@ -31,7 +32,7 @@ app.use(morgan('dev'));
 app.use('/api/auth', authRoutes);
 app.use('/api/upload', fileRoutes);
 app.use('/api/friend', friendRoutes);
-app.use('/api/gDrive', gDriveRoutes);
+app.use('/api/gdrive', gDriveRoutes);
 app.use('/api/group', groupRoutes);
 app.use('/api/user', userRoutes);
 
@@ -42,6 +43,12 @@ app.get('/api', (req, res) => {
         apiVersion: JSON.parse(fs.readFileSync('./package.json').toString())
             .version
     });
+});
+
+// Keep deployed url active
+cron.schedule('*/1 * * * *', async () => {
+    const res = await axios.get('https://cloudbind-api.onrender.com/api');
+    console.log(res);
 });
 
 // Listening on the port

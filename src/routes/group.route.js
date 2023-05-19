@@ -5,24 +5,21 @@ const {
     joinGroup,
     viewGroups,
     toggleVisibility,
-    togglePhotoVisibility
+    togglePhotoVisibility,
+    fetchMedia
 } = require('../controllers/group.controller');
 
 const router = express.Router();
 
-router.post('/create', [auth.verifyJwt, auth.accountActivatedTrue], createGroup);
-
 router.post(
-    '/join',
+    '/create',
     [auth.verifyJwt, auth.accountActivatedTrue],
-    joinGroup
+    createGroup
 );
 
-router.get(
-    '/view',
-    [auth.verifyJwt, auth.accountActivatedTrue],
-    viewGroups
-);
+router.post('/join', [auth.verifyJwt, auth.accountActivatedTrue], joinGroup);
+
+router.get('/view', [auth.verifyJwt, auth.accountActivatedTrue], viewGroups);
 
 router.patch(
     '/toggle-visibility/:id',
@@ -34,6 +31,12 @@ router.patch(
     '/toggle-photo-visibility/:id',
     [auth.verifyJwt, auth.accountActivatedTrue],
     togglePhotoVisibility
+);
+
+router.get(
+    '/media/:id',
+    [auth.verifyJwt, auth.accountActivatedTrue],
+    fetchMedia
 );
 
 module.exports = router;
