@@ -46,10 +46,12 @@ const groupSchema = new mongoose.Schema(
                         type: String
                     },
                     media: {
-                        type: {
-                            id: String,
-                            url: String
-                        }
+                        type: [
+                            {
+                                id: String,
+                                url: String
+                            }
+                        ]
                     }
                 }
             ]
