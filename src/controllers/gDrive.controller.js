@@ -155,7 +155,7 @@ const gDriveUpload = async (req, res) => {
                     },
                     url: response1.data.webViewLink,
                     groupId: req.body.groupId,
-                    tag: response3.tag
+                    tags: response3.data.tag
                 });
 
                 const group = await Group.findById(req.body.groupId);
@@ -181,7 +181,7 @@ const gDriveUpload = async (req, res) => {
                         profilePicture: req.user.profilePicture
                     },
                     url: response1.data.webViewLink,
-                    tag: response3.tag
+                    tags: response3.data.tag
                 });
 
                 for (const item of req.body.userIds) {
