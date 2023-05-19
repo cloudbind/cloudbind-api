@@ -13,7 +13,7 @@ RUN if [ "$NODE_ENV" = "development"]; \
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 5000
 
 CMD ["node", "./src/index.js"]
 

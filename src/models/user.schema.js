@@ -43,7 +43,13 @@ const userSchema = new mongoose.Schema(
                 {
                     _id: String,
                     name: String,
-                    username: String
+                    username: String,
+                    media: [
+                        {
+                            id: String,
+                            url: String
+                        }
+                    ]
                 }
             ]
         },
@@ -68,8 +74,11 @@ const userSchema = new mongoose.Schema(
         groups: {
             type: [String]
         },
-        gDriveRefreshToken:{
+        gDriveRefreshToken: {
             type: String
+        },
+        tag: {
+            type: Number
         },
         isVisible: {
             type: Boolean,

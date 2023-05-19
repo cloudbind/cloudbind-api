@@ -9,7 +9,8 @@ const connectionParameters = {
 mongoose.set('strictQuery', true);
 
 // Connecting to the database
-const connection = mongoose.connect(process.env.MONGODB_URI, connectionParameters)
+const connection = mongoose
+    .connect(process.env.MONGODB_URI, connectionParameters)
     .then(() => {
         console.log(`Connected to database`);
     })

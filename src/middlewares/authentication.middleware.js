@@ -6,7 +6,9 @@ const auth = {
     verifyJwt: async (req, res, next) => {
         try {
             if (req.header('Authorization')) {
-                const token = req.header('Authorization').replace('Bearer ', '');
+                const token = req
+                    .header('Authorization')
+                    .replace('Bearer ', '');
                 if (!token) {
                     res.status(401).json({
                         message: 'Please Authenticate!'
@@ -19,7 +21,11 @@ const auth = {
                             message: 'Please Authenticate!'
                         });
                     } else {
-                        const checkToken = await Auth.findOneAndUpdate({ token: token, isExpired: false }, { lastAccess: new Date() }, { new: true });
+                        const checkToken = await Auth.findOneAndUpdate(
+                            { token: token, isExpired: false },
+                            { lastAccess: new Date() },
+                            { new: true }
+                        );
 
                         if (!checkToken) {
                             res.status(401).json({
@@ -30,7 +36,7 @@ const auth = {
                             req.user = jwtVerify;
 
                             next();
-                        } 
+                        }
                     }
                 }
             } else {
@@ -43,7 +49,7 @@ const auth = {
                 message: error.message
             });
         }
-    }, 
+    },
 
     accountActivatedTrue: (req, res, next) => {
         try {
@@ -98,7 +104,7 @@ const auth = {
             if (req.user.loginProvider === 'CLOUD BIND') {
                 next();
             } else {
-                res.status(403  ).json({
+                res.status(403).json({
                     message: 'Access Denied'
                 });
             }

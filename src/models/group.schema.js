@@ -28,23 +28,31 @@ const groupSchema = new mongoose.Schema(
             type: Number
         },
         users: {
-            type: [{
-                id: {
-                    type: String
-                },
-                name: {
-                    type: String
-                },
-                username: {
-                    type: String
-                },
-                email: {
-                    type: String
-                },
-                profilePicture: {
-                    type: String
+            type: [
+                {
+                    id: {
+                        type: String
+                    },
+                    name: {
+                        type: String
+                    },
+                    username: {
+                        type: String
+                    },
+                    email: {
+                        type: String
+                    },
+                    profilePicture: {
+                        type: String
+                    },
+                    media: {
+                        type: {
+                            id: String,
+                            url: String
+                        }
+                    }
                 }
-            }]
+            ]
         },
         isVisible: {
             type: Boolean,
